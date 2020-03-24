@@ -1,0 +1,27 @@
+# Maintainer: Eric Bélanger <eric@archlinux.org>
+
+pkgname=bash-completion
+pkgver=2.10
+pkgrel=20200322
+pkgdesc='Programmable completion for the bash shell'
+arch=(any)
+url='https://github.com/scop/bash-completion'
+license=(GPL2)
+depends=(bash)
+options=(!emptydirs !makeflags)
+source=($url/releases/download/$pkgver/$pkgname-$pkgver.tar.xz)
+sha256sums=('123c17998e34b937ce57bb1b111cd817bc369309e9a8047c0bcf06ead4a3ec92')
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --prefix=/usr --sysconfdir=/etc
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+
+  # remove Slackware's makepkg completion
+  rm "$pkgdir/usr/share/bash-completion/completions/makepkg"
+}
